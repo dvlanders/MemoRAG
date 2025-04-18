@@ -27,6 +27,7 @@ High-performance Text-to-Speech server with OpenAI-compatible API, multilingual 
   - [Mandarin Model](https://huggingface.co/lex-au/Orpheus-3b-Chinese-FT-Q8_0.gguf)
   - [German Model](https://huggingface.co/lex-au/Orpheus-3b-German-FT-Q8_0.gguf)
 - 🐳 Docker Compose users: To use a language-specific model, edit the `.env` file before installation and change `ORPHEUS_MODEL_NAME` to match the desired model repo ID (e.g., `Orpheus-3b-French-FT-Q8_0.gguf`)
+- An additional Docker Compose installation path is now available, specifically for CPU-bound scenarios. This contribution comes from [@alexjyong](https://github.com/alexjyong) - thank you!
 
 **v1.2.0** (2025-04-12)
 - ❤️ Added optional Docker Compose support with GPU-enabled `llama.cpp` server and Orpheus-FastAPI integration  
