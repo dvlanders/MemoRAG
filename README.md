@@ -103,6 +103,7 @@ Orpheus-FastAPI/
 - Python 3.8-3.11 (Python 3.12 is not supported due to removal of pkgutil.ImpImporter)
 - CUDA-compatible GPU (recommended: RTX series for best performance)
 - Using docker compose or separate LLM inference server running the Orpheus model (e.g., LM Studio or llama.cpp server)
+- For Docker GPU Support, ensure you're using an Nvidia GPU on either Linux or Windows with CUDA 12.4 or greater and NVIDIA Container Toolkit installed
 
 ### 🐳 Docker compose
 
