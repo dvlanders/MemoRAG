@@ -8,6 +8,9 @@ High-performance Text-to-Speech server with OpenAI-compatible API, multilingual 
 
 ## Changelog
 
+**v1.3.1** (2025-07-05)
+- 🐳 ROCm Docker implementation contributed by [@wizardeur](https://github.com/wizardeur) – many thanks for your contribution ❤️
+
 **v1.3.0** (2025-04-18)
 - 🌐 Added comprehensive multilingual support with 16 new voice actors across 7 languages
 - 🗣️ New voice actors include:
@@ -108,7 +111,7 @@ Orpheus-FastAPI/
 ### 🐳 Docker compose
 
 The docker compose file orchestrates the Orpheus-FastAPI for audio and a llama.cpp inference server for the base model token generation. The GGUF model is downloaded with the model-init service.
-There are two versions, one for machines that have access to GPU support `docker-compose-gpu.yaml` and one for CPU support only: `docker-compose-cpu.yaml`
+There are three versions, two for machines that have access to GPU support `docker-compose-gpu.yaml`, `docker-compose-gpu-rocm.yml`  and one for CPU support only: `docker-compose-cpu.yaml`
 
 ```bash
 cp .env.example .env # Create your .env file from the example
