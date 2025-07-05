@@ -101,7 +101,7 @@ Orpheus-FastAPI/
 ### Prerequisites
 
 - Python 3.8-3.11 (Python 3.12 is not supported due to removal of pkgutil.ImpImporter)
-- CUDA-compatible GPU (recommended: RTX series for best performance)
+- CUDA-compatible or ROCm-compatible GPU (recommended: RTX series for best performance)
 - Using docker compose or separate LLM inference server running the Orpheus model (e.g., LM Studio or llama.cpp server)
 - For Docker GPU Support, ensure you're using an Nvidia GPU on either Linux or Windows with CUDA 12.4 or greater and NVIDIA Container Toolkit installed
 
@@ -123,9 +123,14 @@ ORPHEUS_MODEL_NAME=Orpheus-3b-French-FT-Q8_0.gguf  # Example for French
 
 Then start the services:
 
-For GPU support run
+For CUDA GPU support run
 ```bash
 docker compose -f docker-compose-gpu.yml up
+```
+
+For ROCm GPU support run
+```bash
+docker compose -f docker-compose-gpu-rocm.yml up
 ```
 
 For CPU support run:
@@ -157,6 +162,11 @@ conda activate orpheus-tts
 3. Install PyTorch with CUDA support:
 ```bash
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+```
+or
+Install PyTorch with ROCm support:
+```bash
+pip3 install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/rocm6.4/
 ```
 
 4. Install other dependencies:

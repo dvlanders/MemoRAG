@@ -1,0 +1,86 @@
+services:
+  orpheus-fastapi:
+    container_name: orpheus-fastapi
+    image: orpheus-tts-fastapi-server-orpheus-fastapi:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.gpu-rocm
+    ports:
+      - "5005:5005"
+    env_file:
+      - .env
+    environment:
+      - ORPHEUS_API_URL=http://llama-cpp-server:5006/v1/completions
+    ipc: host
+    privileged: true
+    security_opt:
+      - seccomp=unconfined
+    cap_add:
+      - SYS_PTRACE
+      - CAP_SYS_ADMIN
+    devices:
+      - /dev/kfd
+      - /dev/dri
+      - /dev/mem
+    group_add:
+      - video
+      - render
+      # - 993 # Add numeric render/video group id(s) if your system has different group id(s) than the image - 44(video),109(render)
+    shm_size: 8g
+    restart: unless-stopped
+    depends_on:
+      llama-cpp-server:
+        condition: service_started
+
+  llama-cpp-server:
+    image: ghcr.io/ggml-org/llama.cpp:server-vulkan
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./models:/models
+    env_file:
+      - .env
+    depends_on:
+      model-init:
+        condition: service_completed_successfully
+    cap_add:
+      - SYS_PTRACE
+      - CAP_SYS_ADMIN
+    security_opt:
+      - seccomp=unconfined
+    privileged: true
+    devices:
+      - /dev/kfd
+      - /dev/dri
+      - /dev/mem
+    group_add:
+      - video
+      - 993
+    ipc: host
+    shm_size: 8g
+    restart: unless-stopped
+    command: >
+      -m /models/${ORPHEUS_MODEL_NAME}
+      --port 5006 
+      --host 0.0.0.0 
+      --n-gpu-layers 29
+      --ctx-size ${ORPHEUS_MAX_TOKENS}
+      --n-predict ${ORPHEUS_MAX_TOKENS}
+      --rope-scaling linear
+
+  model-init:
+    image: curlimages/curl:latest
+    user: ${UID}:${GID}
+    volumes:
+      - ./models:/app/models
+    working_dir: /app
+    command: >
+      sh -c '
+      if [ ! -f /app/models/${ORPHEUS_MODEL_NAME} ]; then
+        echo "Downloading model file..."
+        wget -P /app/models https://huggingface.co/lex-au/${ORPHEUS_MODEL_NAME}/resolve/main/${ORPHEUS_MODEL_NAME}
+      else
+        echo "Model file already exists"
+      fi'
+    restart: "no"
+    
